@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum RustPluginError: Error {
+enum SwiftRustToolError: Error {
     
-    case cargoFailure(CInt)
+    case shellExitCode(CInt)
 }

@@ -41,13 +41,6 @@ extension Cargo {
     var command: String {
         return arguments.reduce("cargo", { $0 + " " + $1 })
     }
-    
-    func run() throws {
-        let code = _system(Self.executablePath + "/" + command)
-        guard code == 0 else {
-            throw RustPluginError.cargoFailure(code)
-        }
-    }
 }
 
 extension Cargo {
@@ -235,6 +228,3 @@ extension CargoCommand {
         }
     }
 }
-
-@_silgen_name("system")
-func _system(_ command: UnsafePointer<CChar>) -> CInt

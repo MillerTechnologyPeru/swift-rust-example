@@ -27,7 +27,8 @@ let package = Package(
             linkerSettings: [
                 .linkedLibrary("swift_rust_example"),
                 .unsafeFlags([
-                    "-Ltarget/aarch64-unknown-linux-gnu/debug"
+                    "-Ltarget/debug",
+                    "-L.build/plugins/outputs/swift-rust-example/SwiftRustExample/RustPlugin/cargo-build/debug"
                 ])
             ],
             plugins: [
@@ -35,15 +36,7 @@ let package = Package(
             ]
         ),
         .target(
-            name: "CSwiftRust",
-            swiftSettings: [
-                .unsafeFlags([
-                    "-Xlinker", "-lswift_rust_example",
-                ])
-            ],
-            plugins: [
-                "RustPlugin"
-            ]
+            name: "CSwiftRust"
         ),
         .plugin(
             name: "RustPlugin",

@@ -10,9 +10,9 @@ import PackagePlugin
 
 @main
 struct RustPlugin: BuildToolPlugin {
-    
-    let rustPackageName = "swift-rust-example"
-    
+        
+    let rustLibraryName = "swift_rust_example"
+        
     /// This entry point is called when operating on a Swift package.
     func createBuildCommands(context: PluginContext, target: Target) throws -> [Command] {
         
@@ -24,6 +24,7 @@ struct RustPlugin: BuildToolPlugin {
         let manifestPath = packagePath.appending(subpath: "Cargo.toml")
         let rustDirectory = packagePath.appending(subpath: "src")
         let targetDirectory = context.pluginWorkDirectory.appending(subpath: "cargo-build")
+        let compiledLibraryPath = targetDirectory.appending(subpath: "debug").appending(subpath: "lib\(rustLibraryName).a")
         
         // create target directory
         print("Target directory:", targetDirectory.string)
@@ -47,28 +48,25 @@ struct RustPlugin: BuildToolPlugin {
         
         // first compile rust code
         do {
-            let cargoCommand = Cargo.build(
-                Cargo.Build(
-                    manifestPath: manifestPath.string,
-                    package: rustPackageName,
-                    targetDirectory: targetDirectory.string,
-                    targetArchitecture: nil,
-                    releaseConfiguration: false
-                )
+            let command = Command.buildCommand(
+                displayName: "Compile Rust",
+                executable: executable,
+                arguments: [
+                    "compile",
+                    "--manifest-path", manifestPath.string,
+                    "--target-directory", targetDirectory.string
+                ],
+                inputFiles: rustFiles,
+                outputFiles: [compiledLibraryPath]
             )
-            print(cargoCommand)
-            // runs in sandbox
-            /*
-            let compileCommand = Command.prebuildCommand(
-                 displayName: "Build with Cargo",
-                 executable: Path(Cargo.executablePath),
-                 arguments: cargoCommand.arguments,
-                 outputFilesDirectory: targetDirectory
-            )
-            commands.append(compileCommand)
-            */
-            //try cargoCommand.run()
+            commands.append(command)
         }
+
+        // copy compiled library
+        do {
+            
+        }
+        
         
         /*
         // copy generated C headers
