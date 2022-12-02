@@ -13,10 +13,29 @@ struct Compile: ParsableCommand {
     @Flag(help: "Verbose output.")
     var verbose = false
     
-    @Option(help: "The number of times to repeat 'phrase'.")
-    var count: Int? = nil
-
+    @Option(help: "Cargo manifest path")
+    var manifestPath: String
+    
+    @Option(help: "Cargo package name")
+    var package: String
+    
+    @Option(help: "Cargo target directory")
+    var targetDirectory: String
+    
+    @Flag(help: "Build for release configuration.")
+    var release = false
+    
     mutating func run() throws {
-        print(self, #function)
+        let cargoCommand = Cargo.build(
+            Cargo.Build(
+                manifestPath: manifestPath,
+                package: package,
+                targetDirectory: targetDirectory,
+                targetArchitecture: nil,
+                releaseConfiguration: release
+            )
+        )
+        print(cargoCommand)
+        try cargoCommand.run()
     }
 }

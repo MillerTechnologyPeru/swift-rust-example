@@ -17,6 +17,7 @@ struct SwiftRustTool: AsyncParsableCommand {
         version: "1.0.0",
         subcommands: [
             Compile.self
-        ]
+        ],
+        defaultSubcommand: Compile.self
     )
 }
