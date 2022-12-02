@@ -10,4 +10,4 @@ mkdir -p .build/plugins/outputs/swift-rust-example/SwiftRustExample/RustPlugin/c
 cp -rf ~/.cargo/*  .build/plugins/outputs/swift-rust-example/SwiftRustExample/RustPlugin/cargo-build/
 
 # Build Swift
-swift test
+swift build --build-tests

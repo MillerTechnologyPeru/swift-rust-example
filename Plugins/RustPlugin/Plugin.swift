@@ -15,7 +15,9 @@ struct RustPlugin: BuildToolPlugin {
         
     /// This entry point is called when operating on a Swift package.
     func createBuildCommands(context: PluginContext, target: Target) throws -> [Command] {
-        
+        #if os(macOS)
+        return []
+        #else
         let fileManager = FileManager.default
         
         // get paths
@@ -99,5 +101,6 @@ struct RustPlugin: BuildToolPlugin {
         }
         */
         return commands
+        #endif
     }
 }
