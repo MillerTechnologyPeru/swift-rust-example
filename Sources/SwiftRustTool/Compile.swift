@@ -10,9 +10,6 @@ import ArgumentParser
 
 struct Compile: ParsableCommand {
     
-    @Flag(help: "Verbose output.")
-    var verbose = false
-    
     @Option(help: "Cargo manifest path")
     var manifestPath: String
     
@@ -25,7 +22,11 @@ struct Compile: ParsableCommand {
     @Flag(help: "Build for release configuration.")
     var release = false
     
+    @Flag(help: "Verbose output.")
+    var verbose = false
+    
     mutating func run() throws {
+        /*
         let cargoCommand = Cargo.build(
             Cargo.Build(
                 manifestPath: manifestPath,
@@ -36,6 +37,6 @@ struct Compile: ParsableCommand {
             )
         )
         print(cargoCommand)
-        try cargoCommand.run()
+        try cargoCommand.run()*/
     }
 }

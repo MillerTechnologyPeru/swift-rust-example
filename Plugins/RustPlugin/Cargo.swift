@@ -12,6 +12,8 @@ enum Cargo {
     
     /// `cargo-clean` - Remove generated artifacts
     case clean(Clean)
+
+    /// `cargo-build` - Compile the current package
     case build(Build)
 }
 
@@ -24,23 +26,26 @@ extension Cargo: CustomStringConvertible {
 
 extension Cargo {
     
-    var command: String {
+    var arguments: [String] {
         var arguments = [String]()
         arguments.reserveCapacity(5)
-        arguments.append(Self.executablePath)
         switch self {
         case let .build(build):
             build.appendArguments(&arguments)
         case let .clean(clean):
             clean.appendArguments(&arguments)
         }
-        return arguments.reduce("", { $0 + ($0.isEmpty ? "" : " ") + $1 })
+        return arguments
+    }
+    
+    var command: String {
+        return arguments.reduce("cargo", { $0 + " " + $1 })
     }
     
     func run() throws {
-        let code = _system(command)
+        let code = _system(Self.executablePath + "/" + command)
         guard code == 0 else {
-            throw SwiftRustToolError.cargoFailure(code)
+            throw RustPluginError.cargoFailure(code)
         }
     }
 }
@@ -49,7 +54,7 @@ extension Cargo {
     
     enum Command {
         
-        /// `cargo-build` - Compile the current package
+        /// `cargo-clean` - Remove generated artifacts
         ///
         /// [Documentation](https://doc.rust-lang.org/cargo/commands/cargo-clean.html)
         case clean
@@ -83,7 +88,7 @@ extension Cargo {
          --package spec...
          Clean only the specified packages. This flag may be specified multiple times. See cargo-pkgid(1) for the SPEC format.
          */
-        let package: String
+        let package: String?
         
         /*
          --target-dir directory
@@ -95,7 +100,9 @@ extension Cargo {
             var arguments = [Argument]()
             arguments.reserveCapacity(3)
             arguments.append(.manifestPath(manifestPath))
-            arguments.append(.package(package))
+            if let value = package {
+                arguments.append(.package(value))
+            }
             arguments.append(.targetDirectory(targetDirectory))
             return arguments
         }
@@ -121,7 +128,7 @@ extension Cargo {
          --package spec...
          Build only the specified packages. See cargo-pkgid(1) for the SPEC format. This flag may be specified multiple times and supports common Unix glob patterns like *, ? and []. However, to avoid your shell accidentally expanding glob patterns before Cargo handles them, you must use single quotes or double quotes around each pattern.
          */
-        let package: String
+        let package: String?
         
         /*
          --target-dir directory
@@ -149,7 +156,9 @@ extension Cargo {
             var arguments = [Argument]()
             arguments.reserveCapacity(5)
             arguments.append(.manifestPath(manifestPath))
-            arguments.append(.package(package))
+            if let value = package {
+                arguments.append(.package(value))
+            }
             arguments.append(.targetDirectory(targetDirectory))
             if let value = targetArchitecture {
                 arguments.append(.targetArchitecture(value))
@@ -165,10 +174,10 @@ extension Cargo {
 extension Cargo {
     
     static var executablePath: String {
-        #if XCODE || os(macOS)
-        return "/opt/homebrew/bin/cargo"
+        #if os(macOS)
+        return "/opt/homebrew/bin"
         #else
-        return "cargo"
+        return "/usr/bin"
         #endif
     }
 }

@@ -9,6 +9,8 @@ final class SwiftRustExampleTests: XCTestCase {
         // results.
         XCTAssertEqual(SwiftRustExample().text, "Hello, World!")
         
-        //print_hello_rust()
+        print_hello_rust()
+        
+        XCTAssertEqual(rust_add(2, 2), 4)
     }
 }

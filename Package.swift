@@ -19,8 +19,6 @@ let package = Package(
         )
     ],
     targets: [
-        // Targets are the basic building blocks of a package. A target can define a module or a test suite.
-        // Targets can depend on other targets in this package, and on products in packages this package depends on.
         .target(
             name: "SwiftRustExample",
             dependencies: [
@@ -28,7 +26,7 @@ let package = Package(
             ],
             swiftSettings: [
                 .unsafeFlags([
-                    //"-Xlinker", "-lswift_rust_example",
+                    "-Xlinker", "-lswift_rust_example",
                 ])
             ],
             plugins: [
@@ -37,6 +35,11 @@ let package = Package(
         ),
         .target(
             name: "CSwiftRust",
+            swiftSettings: [
+                .unsafeFlags([
+                    "-Xlinker", "-lswift_rust_example",
+                ])
+            ],
             plugins: [
                 "RustPlugin"
             ]
@@ -59,7 +62,12 @@ let package = Package(
         ),
         .testTarget(
             name: "SwiftRustExampleTests",
-            dependencies: ["SwiftRustExample"]
+            dependencies: ["SwiftRustExample"],
+            swiftSettings: [
+                .unsafeFlags([
+                    "-Xlinker", "-lswift_rust_example",
+                ])
+            ]
         )
     ]
 )

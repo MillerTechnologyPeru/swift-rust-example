@@ -1,0 +1,5 @@
+module CSwiftRust [system] {
+    header "SwiftBridgeCore.h"
+    header "swift-rust-example.h"
+    export *
+}
