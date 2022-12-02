@@ -34,7 +34,7 @@ extension Cargo {
         case let .clean(clean):
             clean.appendArguments(&arguments)
         }
-        return arguments.reduce("", { $0 + $1 })
+        return arguments.reduce("", { $0 + ($0.isEmpty ? "" : " ") + $1 })
     }
     
     func run() throws {
@@ -165,7 +165,7 @@ extension Cargo {
 extension Cargo {
     
     static var executablePath: String {
-        #if XCODE
+        #if XCODE || os(macOS)
         return "/opt/homebrew/bin/cargo"
         #else
         return "cargo"
