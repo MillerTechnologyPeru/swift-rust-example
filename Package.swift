@@ -24,9 +24,10 @@ let package = Package(
             dependencies: [
                 "CSwiftRust"
             ],
-            swiftSettings: [
+            linkerSettings: [
+                .linkedLibrary("swift_rust_example"),
                 .unsafeFlags([
-                    "-Xlinker", "-lswift_rust_example",
+                    "-Ltarget/aarch64-unknown-linux-gnu/debug"
                 ])
             ],
             plugins: [
@@ -62,12 +63,7 @@ let package = Package(
         ),
         .testTarget(
             name: "SwiftRustExampleTests",
-            dependencies: ["SwiftRustExample"],
-            swiftSettings: [
-                .unsafeFlags([
-                    "-Xlinker", "-lswift_rust_example",
-                ])
-            ]
+            dependencies: ["SwiftRustExample"]
         )
     ]
 )
