@@ -27,7 +27,7 @@ let package = Package(
             linkerSettings: [
                 .linkedLibrary("swift_rust_example"),
                 .unsafeFlags([
-                    "-Ltarget/debug",
+                    //"-Ltarget/debug",
                     "-L.build/plugins/outputs/swift-rust-example/SwiftRustExample/RustPlugin/cargo-build/debug"
                 ])
             ],
